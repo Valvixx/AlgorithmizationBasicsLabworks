@@ -27,6 +27,7 @@ public class Lab1
 
         int result = max - min;
         Console.WriteLine(result);
+        Console.WriteLine("---");
     }
 
     public static void Task2()
@@ -37,38 +38,74 @@ public class Lab1
             array[l] = new Random().Next(-1000, 1000);
             Console.WriteLine(array[l]);
         }
+
+        Console.WriteLine("---");
     }
 
     public static void Task3()
     {
         int size = Convert.ToInt32(Console.ReadLine());
         int[] array = new int[size];
-
-        Console.WriteLine($"Array size: {array.Length}");
+        foreach (var l in array)
+        {
+            array[l] = new Random().Next(-1000, 1000);
+            Console.WriteLine(array[l]);
+        }
+        var str = string.Join(" ", array);
+        Console.WriteLine(str);
+        Console.WriteLine("---");
     }
 
     public static void Task4()
     {
-        int[,] array =
+        int colsInput = Convert.ToInt32(Console.ReadLine());
+        int rowsInput = Convert.ToInt32(Console.ReadLine());
+        int[][] array = new int[colsInput][];
+        Random rand = new Random();
+        
+        for (int i = 0; i < colsInput; i++)
         {
-            { 1, 2, 3 },
-            { 4, 5, 6 },
-            { 7, 8, 9 }
-        };
+            array[i] = new int[rowsInput];
 
-        int rows = array.GetLength(0);
-        int cols = array.GetLength(1);
+            for (int j = 0; j < rowsInput; j++)
+            {
+                array[i][j] = rand.Next(-10, 10);
+            }
+        }
+        
 
-        for (int i = 0; i < rows; i++)
+        for (int i = 0; i < colsInput; i++)
+        {
+            for (int j = 0; j < rowsInput; j++)
+            {
+                Console.Write($"{array[i][j],4} ");
+            }
+            Console.WriteLine();
+        }
+        
+        for (int i = 0; i < colsInput; i++)
         {
             int rowSum = 0;
-            for (int j = 0; j < cols; j++)
+            for (int j = 0; j < rowsInput; j++)
             {
-                rowSum += array[i, j];
+                rowSum += array[i][j];
             }
-
             Console.WriteLine($"Сумма строки {i + 1}: {rowSum}");
         }
+        
+        int sumBelowDiagonal = 0;
+
+        for (int i = 1; i < colsInput; i++)
+        {
+            for (int j = 0; j < i && j < rowsInput; j++)
+            {
+                sumBelowDiagonal += array[i][j];
+            }
+        }
+
+        Console.WriteLine($"Сумма элементов ниже главной диагонали: {sumBelowDiagonal}");
+
+            // сумма всех чисел ниже главной диагонали + динамический массив
     }
 
     public static void Task5()
@@ -86,7 +123,7 @@ public class Lab1
         Console.WriteLine("Введите фамилию для поиска:");
         string searchLastName = Console.ReadLine();
 
-        Student? foundStudent = FindStudent(students, searchFirstName, searchLastName);
+        Student? foundStudent = Student.FindStudent(students, searchFirstName, searchLastName);
 
         if (foundStudent != null)
         {
@@ -99,18 +136,7 @@ public class Lab1
         }
     }
 
-    static Student? FindStudent(Student[] students, string firstName, string lastName)
-    {
-        foreach (var student in students)
-        {
-            if (student.FirstName == firstName && student.LastName == lastName)
-            {
-                return student;
-            }
-        }
 
-        return null;
-    }
 }
 
 struct Student
@@ -130,5 +156,18 @@ struct Student
     {
         Console.WriteLine($"Имя: {FirstName}, Фамилия: {LastName}, Факультет: {Faculty}," +
                           $" Номер зачётки: {RecordBookNumber}");
+    }
+
+    public static Student? FindStudent(Student[] students, string firstName, string lastName)
+    {
+        foreach (var student in students)
+        {
+            if (student.FirstName == firstName && student.LastName == lastName)
+            {
+                return student;
+            }
+        }
+
+        return null;
     }
 }
